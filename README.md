@@ -2,7 +2,7 @@
 
 ---
 
-This Unity project provides a framework for generating **synthetic image datasets** specifically tailored for **obstacle detection in aerial environments**. Designed with machine learning applications in mind, it facilitates the creation of diverse visual data to train robust computer vision models, such as those used in autonomous drone navigation.
+This Unity project provides a framework for generating **synthetic image datasets** that can be used for, but not limited to, diverse computer vision tasks on aerial environment and simulations. Designed with machine learning applications in mind, it facilitates the creation of diverse visual data to train robust computer vision models, such as those used in aerial navigation.
 
 ## Why use this project?
 
