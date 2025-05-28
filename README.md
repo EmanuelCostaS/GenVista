@@ -1,26 +1,53 @@
-# SkyEyeSim - Synthetic Obstacle Detection Dataset Generator for Airborne Systems
+# GenVista 
+> Crafting Diverse Synthetic Worlds for AI Perception.
 
 ---
 
-This Unity project provides a framework for generating **synthetic image datasets** that can be used for, but not limited to, diverse computer vision tasks on aerial environment and simulations. Designed with machine learning applications in mind, it facilitates the creation of diverse visual data to train robust computer vision models, such as those used in aerial navigation.
+## Overview
 
-## Why use this project?
+GenVista is an open-source, Unity-based framework for generating diverse, richly annotated **synthetic datasets**. It aims to help ML, robotics, and computer vision developers create customizable 3D scenes and simulate sensor outputs to accelerate AI model development. Our mission is to provide a versatile, community-driven tool for a wide array of perception tasks. It has just started, but it will be upgraded from time to time.
 
-Training reliable object detection models for airborne systems requires vast amounts of varied data, which can be expensive and time-consuming to collect in the real world. This repository offers a solution by:
+## Core Features
 
-* **Automating image capture:** Efficiently generate thousands of images from a simulated aerial perspective.
-* **Controlling environmental variables:** Easily randomize lighting conditions, backgrounds, and the placement of obstacles.
-* **Generating ground truth:** Automatically produce precise bounding box annotations for all detected obstacles, formatted for popular object detection frameworks like YOLO.
-* **Enabling diverse scenarios:** Simulate a wide range of operational conditions, from varying altitudes and angles to different times of day and atmospheric effects.
+*   **Versatile 3D Environments**: Create/customize urban, natural, or indoor scenes. (TBD)
+*   **Customizable Sensors**: Simulate cameras (RGB, depth, segmentation) with extensibility for more. (TBD)
+*   **Rich Annotations**: Auto-generate 2D/3D bounding boxes, semantic/instance masks, and depth maps. (TBD)
+*   **Domain Randomization**: Tools to vary textures, lighting, and object placements. (TBD)
+*   **Unity Powered**: Leverages Unity for high-fidelity rendering and physics.
+*   **Scripting & Extensibility**: Full programmatic control and modular design for community contributions.
+*   **Detailed Atmosphere**: Thanks to [Tenkoku Dynamic Sky](https://assetstore.unity.com/packages/tools/particles-effects/tenkoku-dynamic-sky-34435), it is simple to edit the weather conditions.
 
 ## Getting Started
 
-1.  **Clone this repository:** `git clone https://github.com/EmanuelCostaS/SkyEyeSim.git`
-2.  **Open in Unity:** Navigate to the cloned project in the Unity Hub and open it.
-3.  **Explore the `DatasetGenerator` script:** Attach this script to an empty GameObject in your scene to configure the dataset generation process. Adjust parameters for image count, randomization ranges for obstacles and camera positions, and output folders.
-4.  **Add your own obstacles:** Populate the scene with various 3D models you wish to detect. Ensure these models have a `Renderer` component for bounding box calculation.
-5.  **Run the scene:** The project will automatically generate images and corresponding label files into your specified output directory.
+1.  **Prerequisites**: Unity Hub, Unity Editor (2022.3 LTS+), Git.
+2.  **Clone**: `git clone https://github.com/EmanuelCostaS/GenVista.git` 
+3.  **Open in Unity**: Use Unity Hub to open the cloned project.
+
+## Showcase
+
+*(To be added.)*
+
+## Potential Applications
+
+*   Generating datasets to train object detectors for autonomous systems (vehicles, drones).
+*   Developing perception algorithms for robotics in varied environments.
+*   Generating large-scale datasets for computer vision research (segmentation, depth estimation).
+*   Prototyping 3D assets and environments for simulations or VR/AR.
+*   Supplementing real-world data to improve model generalization.
+
+## Contribution
+
+We welcome community contributions! Please see `CONTRIBUTING.md` (to be added) for guidelines on reporting bugs, suggesting features, and submitting pull requests.
+
+## Acknowledgements
+
+This project utilizes the [Tenkoku Dynamic Sky](https://assetstore.unity.com/packages/tools/particles-effects/tenkoku-dynamic-sky-34435) asset for dynamic sky and weather effects, available on the Unity Asset Store. We thank Tanuki Digital for this resource.
+
+## License
+
+GenVista Engine is released under the Apache License 2.0,
+See the `LICENSE` file for details. (TBD)
 
 ---
 
-This tool aims to simplify the creation of high-quality synthetic datasets, accelerating the development and testing of vision systems for airborne platforms.
+Thank you for your interest in GenVista! If you like it, please leave a star ⭐
