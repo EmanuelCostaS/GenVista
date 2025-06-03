@@ -9,7 +9,7 @@ GenVista is an open-source, Unity-based framework for generating diverse, richly
 
 ## Core Features
 
-*   **Versatile 3D Environments**: Create/customize urban, natural, or indoor scenes. (TBD)
+*   **Versatile 3D Environments**: Import real-life 3D scenarious, using [CESIUM for Unity](https://cesium.com/learn/unity/).
 *   **Customizable Sensors**: Simulate cameras (RGB, depth, segmentation) with extensibility for more. (TBD)
 *   **Rich Annotations**: Auto-generate 2D/3D bounding boxes, semantic/instance masks, and depth maps. (TBD)
 *   **Domain Randomization**: Tools to vary textures, lighting, and object placements. (TBD)
@@ -39,9 +39,21 @@ GenVista is an open-source, Unity-based framework for generating diverse, richly
 
 We welcome community contributions! Please see `CONTRIBUTING.md` (to be added) for guidelines on reporting bugs, suggesting features, and submitting pull requests.
 
-## Acknowledgements
+## Assets Used & Acknowledgements
 
-This project utilizes the [Tenkoku Dynamic Sky](https://assetstore.unity.com/packages/tools/particles-effects/tenkoku-dynamic-sky-34435) asset for dynamic sky and weather effects, available on the Unity Asset Store. We thank Tanuki Digital for this resource.
+This project utilizes several key assets to achieve its functionality and visual fidelity. We are grateful to the creators for their valuable resources.
+
+### Geospatial Engine & Data
+
+This project utilizes [Cesium for Unity](https://cesium.com/platform/cesium-for-unity/) along with data streamed from [Cesium ion](https://cesium.com/ion/) to integrate real-world 3D geospatial capabilities. We thank the Cesium team for providing these powerful tools.
+
+**Important Usage Note for Cesium Platform:** This project is developed for research and non-commercial purposes, utilizing a Cesium ion Community account. For any commercial use of Cesium ion data and services, a commercial Cesium ion subscription is required in accordance with Cesium's terms of service. Please refer to the [Cesium ion pricing page](https://cesium.com/ion/pricing/) for more details on account types and commercial licensing.
+
+### Dynamic Sky & Weather System
+
+This project utilizes the **[Tenkoku Dynamic Sky](https://assetstore.unity.com/packages/tools/particles-effects/tenkoku-dynamic-sky-34435)** for its dynamic sky, lighting, and weather effects. This is a free asset obtained from **Unity Asset Store**. It is used in accordance with its specified license: **Unity Asset Store EULA for free assets**. We thank **Tanuki Digital** for making this valuable resource freely available.
+
+---
 
 ## License
 
