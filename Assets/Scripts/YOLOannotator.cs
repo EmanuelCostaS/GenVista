@@ -42,7 +42,7 @@ public class YoloAnnotator : MonoBehaviour
         }
     }
 
-    void CaptureAndAnnotate()
+    public void CaptureAndAnnotate()
     {
         if (targetObject == null || !targetObject.activeInHierarchy)
         {

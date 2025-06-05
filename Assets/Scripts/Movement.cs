@@ -1,35 +1,41 @@
 using UnityEngine;
 using System.Collections;
-
-public class Player : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] float moveSpeed = 7f;
-    [SerializeField] float groundDrag = 5f; // This will use rb.drag for a linear damping effect when grounded
+    [SerializeField] float groundDrag = 5f;
     [SerializeField] float jumpForce = 12f;
     [SerializeField] float jumpCooldown = 0.25f;
-    [SerializeField] float airMultiplier = 0.4f; // Affects horizontal movement control in air
+    [SerializeField] float airMultiplier = 0.4f;
     bool readyToJump;
 
     [Header("Flying")]
-    [SerializeField] float flySpeed = 5f; // Speed for vertical flight
-    private bool isFlyingMode = false; // Tracks if the player is in active flight mode
-    private bool isTrajectoryMode = false;
+    [SerializeField] float flySpeed = 5f;
+    public bool isFlyingMode = false;
+    // private bool isTrajectoryMode = false; // This was in your script but not used, removed for brevity unless needed
 
     [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;     // Jump on ground, fly up / initiate flight in air
-    public KeyCode descendKey = KeyCode.LeftShift; // Fly down
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode descendKey = KeyCode.LeftShift;
 
     [Header("Ground Check")]
     public float playerHeight = 2f;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     public Transform orientation;
     float horizontalInput;
     float verticalInput;
     Vector3 moveDirection;
     Rigidbody rb;
+
+    [HideInInspector] public bool useExternalInput = false;
+    [HideInInspector] public float externalHorizontalInput = 0f;
+    [HideInInspector] public float externalVerticalInput = 0f;
+    [HideInInspector] public bool externalJumpKeyActive = false; // True if external "jump key" is held
+    [HideInInspector] public bool externalDescendKeyActive = false; // True if external "descend key" is held
+    private bool externalJumpTriggered = false; // For single press jump
 
     private void Start()
     {
@@ -46,132 +52,179 @@ public class Player : MonoBehaviour
         if (orientation == null)
         {
             Debug.LogError("Orientation Transform is not assigned in the Inspector!", this);
+            // Consider disabling if orientation is crucial and missing
+            // enabled = false;
+            // return;
         }
     }
 
     private void Update()
     {
-        if (orientation == null) return;
+        if (orientation == null && !useExternalInput) // Only critical if not externally controlled for basic movement
+        {
+            if (orientation == null)
+            {
+                // If still null, it's a persistent issue
+                if(rb != null) rb.isKinematic = true; // Stop physics if control is impossible
+                return;
+            }
+        }
+
 
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
-        SpeedControl(); // Controls max horizontal speed using rb.velocity
-        HandleDrag();   // Applies groundDrag using rb.drag
+        SpeedControl();
+        HandleDrag();
 
         // Manage flying state and gravity
         if (grounded)
         {
-            isFlyingMode = false; // Exit flying mode when grounded
+            isFlyingMode = false;
         }
-        else
+        else // In Air
         {
-            // If jump key is pressed in air, initiate or continue flying mode
-            if (Input.GetKey(jumpKey))
+            bool jumpPressed = useExternalInput ? externalJumpKeyActive : Input.GetKey(jumpKey);
+            if (jumpPressed && !isFlyingMode) // If jump key is pressed in air for the first time, initiate flying
             {
                 isFlyingMode = true;
             }
         }
 
-        // Apply or remove gravity based on flying mode
         if (isFlyingMode)
         {
             rb.useGravity = false;
         }
         else
         {
-            rb.useGravity = true; // Gravity active if grounded or just falling (not in flight mode)
+            rb.useGravity = true;
         }
     }
 
     private void FixedUpdate()
     {
-        if (orientation == null) return;
-        MovePlayer(); // Handles movement forces and velocities
+        // if (orientation == null && !useExternalInput) return; // Allow movement if externally controlled even without orientation
+        MovePlayer();
+    }
+
+    // Public method to set a single jump trigger for external control
+    public void TriggerExternalJump()
+    {
+        if (useExternalInput)
+        {
+            externalJumpTriggered = true;
+        }
     }
 
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (useExternalInput)
         {
-            readyToJump = false;
-            Jump();
-            Invoke(nameof(ResetJump), jumpCooldown);
-            isFlyingMode = false; // Ensure not in flying mode immediately after a ground jump
+            horizontalInput = externalHorizontalInput;
+            verticalInput = externalVerticalInput;
+
+            // Grounded jump logic for external control
+            if (externalJumpTriggered && readyToJump && grounded)
+            {
+                readyToJump = false;
+                Jump();
+                Invoke(nameof(ResetJump), jumpCooldown);
+                isFlyingMode = false;
+                externalJumpTriggered = false; // Consume the trigger
+            }
+        }
+        else // Original Input
+        {
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            verticalInput = Input.GetAxisRaw("Vertical");
+
+            if (Input.GetKeyDown(jumpKey) && readyToJump && grounded) // Use GetKeyDown for ground jump
+            {
+                readyToJump = false;
+                Jump();
+                Invoke(nameof(ResetJump), jumpCooldown);
+                isFlyingMode = false;
+            }
         }
     }
 
     private void HandleDrag()
     {
-        if (grounded && !isFlyingMode) // Apply ground drag only when on ground and not trying to fly off it
+        if (grounded && !isFlyingMode)
         {
-            rb.linearDamping  = groundDrag; // rb.drag provides linear damping
+            rb.linearDamping = groundDrag; // Corrected to use rb.drag
         }
         else
         {
-            rb.linearDamping  = 0; // No drag in air or when flying
+            rb.linearDamping = 0; // Corrected to use rb.drag
         }
     }
 
     private void MovePlayer()
     {
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        // If orientation is missing, use world coordinates for external control as a fallback
+        if (orientation != null)
+        {
+            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        }
+        else if (useExternalInput) // Fallback for external control if orientation is missing
+        {
+            moveDirection = Vector3.forward * verticalInput + Vector3.right * horizontalInput;
+        } else {
+            moveDirection = Vector3.zero; // No orientation, no external control, no movement
+        }
 
-        // Horizontal Movement (using AddForce for acceleration-based feel)
-        if (grounded && !isFlyingMode) // Normal ground movement
+
+        if (grounded && !isFlyingMode)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         }
-        else if (!grounded) // Air control (applies whether flying or just falling)
+        else if (!grounded) // Air control (applies whether flying or just falling, or actively flying horizontally)
         {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
-        // If grounded and trying to fly (isFlyingMode might become true), horizontal forces still apply.
 
-        // Vertical Flying Movement
-        if (isFlyingMode) // This implies !grounded generally, or just took off
+        if (isFlyingMode)
         {
-            float currentXVel = rb.linearVelocity.x; // Preserve horizontal velocity from AddForce
-            float currentZVel = rb.linearVelocity.z;
+            float currentXVel = rb.linearVelocity.x; // Use rb.velocity
+            float currentZVel = rb.linearVelocity.z; // Use rb.velocity
 
-            if (Input.GetKey(jumpKey)) // Fly Up
+            bool flyUpActive = useExternalInput ? externalJumpKeyActive : Input.GetKey(jumpKey);
+            bool flyDownActive = useExternalInput ? externalDescendKeyActive : Input.GetKey(descendKey);
+
+            if (flyUpActive)
             {
-                // Setting rb.velocity directly for precise vertical control
-                rb.linearVelocity = new Vector3(currentXVel, flySpeed, currentZVel);
+                rb.linearVelocity = new Vector3(currentXVel, flySpeed, currentZVel); // Use rb.velocity
             }
-            else if (Input.GetKey(descendKey)) // Fly Down
+            else if (flyDownActive)
             {
-                rb.linearVelocity = new Vector3(currentXVel, -flySpeed, currentZVel);
+                rb.linearVelocity = new Vector3(currentXVel, -flySpeed, currentZVel); // Use rb.velocity
             }
-            else // No vertical fly input, so hover
+            else // Hover or maintain horizontal movement
             {
-                rb.linearVelocity = new Vector3(currentXVel, 0f, currentZVel);
+                // Only set to zero if not also moving horizontally from AddForce.
+                // AddForce still applies for horizontal, so we just need to counteract gravity / provide hover.
+                // If no horizontal input, vertical velocity becomes 0 for hover.
+                // If there IS horizontal input, AddForce above handles XZ, vertical is set to 0 here for hover.
+                rb.linearVelocity = new Vector3(currentXVel, 0f, currentZVel); // Use rb.velocity
             }
         }
-        // If not isFlyingMode and !grounded, gravity (enabled in Update) handles falling.
-        // Jump() in MyInput gives initial upward velocity for ground jumps.
     }
 
     private void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // Use rb.velocity
 
-        // Limit horizontal velocity
-        // This applies to velocity from AddForce, ensuring it doesn't exceed moveSpeed
         if (flatVel.magnitude > moveSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            // Apply the limited horizontal velocity, preserving the current vertical velocity
-            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z); // Use rb.velocity
         }
     }
 
     private void Jump()
     {
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // Reset y for consistent jump
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // Use rb.velocity
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
 
@@ -183,6 +236,9 @@ public class Player : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(transform.position, Vector3.down * (playerHeight * 0.5f + 0.2f));
+        if (rb != null) // Check rb to avoid error if Start() fails early
+        {
+            Gizmos.DrawRay(transform.position, Vector3.down * (playerHeight * 0.5f + 0.2f));
+        }
     }
 }
