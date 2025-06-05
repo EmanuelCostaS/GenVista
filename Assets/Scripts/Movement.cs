@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [Header("Flying")]
     [SerializeField] float flySpeed = 5f; // Speed for vertical flight
     private bool isFlyingMode = false; // Tracks if the player is in active flight mode
+    private bool isTrajectoryMode = false;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;     // Jump on ground, fly up / initiate flight in air

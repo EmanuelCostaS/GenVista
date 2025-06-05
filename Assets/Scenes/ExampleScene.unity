@@ -459,43 +459,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 31893001}
   m_CullTransparentMesh: 0
---- !u!84 &35056299
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 128
-  m_Height: 128
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &38594343
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +544,7 @@ GameObject:
   - component: {fileID: 47241139}
   - component: {fileID: 47241138}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -615,7 +578,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 47241137}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1108,7 +1071,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8750, y: 8750, z: 8750}
+  m_LocalScale: {x: 26250, y: 26250, z: 26250}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 827173077}
@@ -1699,6 +1662,69 @@ RectTransform:
   m_AnchoredPosition: {x: 223, y: -532.3}
   m_SizeDelta: {x: 122, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &275964311
+GameObject:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 275964313}
+  - component: {fileID: 275964312}
+  m_Layer: 0
+  m_Name: _PerceptionSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &275964312
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275964311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ee903ff896bde4bb82aed4aec2bf61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  consumerEndpoint:
+    rid: 5171996172230590733
+  accumulationSettings:
+    rid: 5171996172230590734
+  references:
+    version: 2
+    RefIds:
+    - rid: 5171996172230590733
+      type: {class: SoloEndpoint, ns: UnityEngine.Perception.GroundTruth.Consumers, asm: Unity.Perception.Runtime}
+      data:
+        soloDatasetName: solo
+    - rid: 5171996172230590734
+      type: {class: AccumulationSettings, ns: UnityEngine.Perception.Settings, asm: Unity.Perception.Runtime}
+      data:
+        accumulationSamples: 256
+        shutterInterval: 0
+        shutterFullyOpen: 0
+        shutterBeginsClosing: 1
+        adaptFixedLengthScenarioFrames: 1
+--- !u!4 &275964313
+Transform:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275964311}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &276417134
 GameObject:
   m_ObjectHideFlags: 0
@@ -7374,7 +7400,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 373721608}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.042615242, y: 0.67447585, z: -0.03905131, w: 0.7360308}
+  m_LocalRotation: {x: 0.014249905, y: 0.97643405, z: -0.20429048, w: 0.06810913}
   m_LocalPosition: {x: -13.70872, y: 9.276348, z: -11.36977}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7507,7 +7533,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387331526}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.18412173, y: -0.7479937, z: 0.2318503, w: -0.5940119}
+  m_LocalRotation: {x: -0.034470223, y: 0.95912623, z: -0.24689528, w: -0.13390855}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7842,7 +7868,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 481879850}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.24945945, y: 0.928227, z: -0.26652247, w: -0.0716275}
+  m_LocalRotation: {x: 0.94598687, y: -0.17012972, z: -0.048849534, w: -0.27162206}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 250, y: 250, z: 250}
   m_ConstrainProportionsScale: 0
@@ -8077,9 +8103,9 @@ MonoBehaviour:
   volWind: 0.014144301
   volTurb1: 0.018859068
   volTurb2: -0.4410654
-  volRain: 1.0905
+  volRain: 0
   volAmbDay: 1e-45
-  volAmbNight: -0.011875943
+  volAmbNight: -0.009440725
   enableSounds: 0
   enableTimeAdjust: 0
 --- !u!4 &497615773
@@ -8260,7 +8286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: 0
-  renderTexDiff: {fileID: 35056299}
+  renderTexDiff: {fileID: 1175124058}
 --- !u!20 &542200256
 Camera:
   m_ObjectHideFlags: 0
@@ -8271,7 +8297,7 @@ Camera:
   m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.22705886, g: 0.26588237, b: 0.29882357, a: 0.6}
+  m_BackGroundColor: {r: 0.39735302, g: 0.46529418, b: 0.52294123, a: 0.6}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -14253,6 +14279,7 @@ GameObject:
   - component: {fileID: 786362296}
   - component: {fileID: 786362295}
   - component: {fileID: 786362294}
+  - component: {fileID: 786362298}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -14349,6 +14376,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &786362298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786362293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8973473abf943c4db94cdce96a4a34c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObject: {fileID: 786362293}
+  captureCamera: {fileID: 1290045145}
+  savePath: YOLO_Dataset
+  objectClassId: 0
+  captureKey: 113
+  imageResolution: {x: 1920, y: 1200}
 --- !u!1 &797134043
 GameObject:
   m_ObjectHideFlags: 0
@@ -25004,7 +25049,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989654144}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.76959765, y: 0.14827396, z: -0.6095172, w: -0.119260795}
+  m_LocalRotation: {x: 0.79155153, y: -0.12488395, z: 0.59723693, w: 0.034031965}
   m_LocalPosition: {x: 0.5529245, y: 0, z: 0}
   m_LocalScale: {x: 1.1074, y: 1.10745, z: 1.10745}
   m_ConstrainProportionsScale: 0
@@ -25097,12 +25142,12 @@ MonoBehaviour:
   _ellipsoidOverride: {fileID: 0}
   _originPlacement: 1
   _originAuthority: 0
-  _latitude: -32.07161
-  _longitude: -52.16279
+  _latitude: -32.07427
+  _longitude: -52.16545
   _height: 2250
-  _ecefX: 3319677.79154686
-  _ecefY: -4273968.521920172
-  _ecefZ: -3368357.5575362607
+  _ecefX: 3319383.260831759
+  _ecefY: -4273998.892320587
+  _ecefZ: -3368607.5890897526
   _scale: 1
 --- !u!4 &999403058
 Transform:
@@ -25120,6 +25165,43 @@ Transform:
   - {fileID: 1055939847}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!84 &1009729498
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 128
+  m_Height: 128
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &1021756980
 GameObject:
   m_ObjectHideFlags: 0
@@ -25292,7 +25374,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1049117152}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.94894123, y: -0.2941366, z: -0.10888175, w: 0.03374931}
+  m_LocalRotation: {x: -0.5835169, y: 0.1502071, z: 0.77289236, w: -0.19895555}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 250, y: 250, z: 250}
   m_ConstrainProportionsScale: 0
@@ -50327,6 +50409,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1172497509}
   m_CullTransparentMesh: 0
+--- !u!84 &1175124058
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 128
+  m_Height: 128
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &1182891545
 GameObject:
   m_ObjectHideFlags: 0
@@ -50439,7 +50558,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183261425}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.96649307, y: -0.24437185, z: -0.076175064, w: 0.019260397}
+  m_LocalRotation: {x: -0.6071737, y: 0.19986926, z: 0.730462, w: -0.24045327}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 250, y: 250, z: 250}
   m_ConstrainProportionsScale: 0
@@ -51250,7 +51369,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.22705886, g: 0.26588237, b: 0.29882357, a: 0.6}
+  m_BackGroundColor: {r: 0.39735302, g: 0.46529418, b: 0.52294123, a: 0.6}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -51272,7 +51391,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 1
-  far clip plane: 100000
+  far clip plane: 300000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -51743,7 +51862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: 1
-  renderTexDiff: {fileID: 2089066330}
+  renderTexDiff: {fileID: 1009729498}
 --- !u!20 &1341923166
 Camera:
   m_ObjectHideFlags: 0
@@ -58611,14 +58730,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684094500}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c655283bae7f774188bb4c7bde76095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tenkokuVersionNumber: 1.2.2
   useAutoFX: 1
-  systemTime: 36480
+  systemTime: 42540
   enableAutoAdvance: 1
   mainCamera: {fileID: 1290045141}
   manualCamera: {fileID: 0}
@@ -58958,7 +59077,7 @@ MonoBehaviour:
   showSounds: 0
   showConfigTime: 0
   showConfigAtmos: 1
-  showConfigWeather: 1
+  showConfigWeather: 0
   showIBL: 0
   allowMultiLights: 0
   skyBrightness: 0.6
@@ -58966,12 +59085,12 @@ MonoBehaviour:
   mieMnAmount: 0.3
   nightBrightness: 0.134
   fogDistance: 39703
-  fogAtmosphere: 5000
+  fogAtmosphere: 10000
   fadeDistance: 0.3
   fogObscurance: 0.3
   setRotation: 180
-  setLatitude: 32.0408
-  setLongitude: 52.1017
+  setLatitude: -32.0408
+  setLongitude: -52.1017
   setTZOffset: -3
   enableDST: 0
   sunSize: 0.02
@@ -59010,28 +59129,28 @@ MonoBehaviour:
   galaxyCubeTex: {fileID: 0}
   useCamera: {fileID: 1290045141}
   useCameraCam: {fileID: 1290045145}
-  moonLightAmt: 0.18379141
-  moonPhase: 0.9081043
+  moonLightAmt: 0.13575268
+  moonPhase: 0.06787634
   ambientCol: {r: 1, g: 1, b: 1, a: 1}
   colorSun: {r: 1, g: 1, b: 0.9960785, a: 1}
-  colorMoon: {r: 0.8000001, g: 0.8352942, b: 0.86666673, a: 1}
+  colorMoon: {r: 0.6899527, g: 0.76446253, b: 0.82328606, a: 1}
   colorSkyBase: {r: 0.60549027, g: 0.70901966, b: 0.7968628, a: 0.8}
   colorSkyBaseLow: {r: 0.7568628, g: 0.8862746, b: 0.9960785, a: 1}
-  colorHorizon: {r: 0.7616354, g: 0.98924327, b: 1.1750166, a: 1.1843052}
-  colorHorizonLow: {r: 0.7616354, g: 0.98924327, b: 1.1750166, a: 1.1843052}
+  colorHorizon: {r: 0.7225353, g: 0.97199774, b: 1.1750166, a: 1.1843052}
+  colorHorizonLow: {r: 0.7225353, g: 0.97199774, b: 1.1750166, a: 1.1843052}
   colorSkyAmbient: {r: 1, g: 1, b: 1, a: 1}
   colorClouds: {r: 0.80784315, g: 0.8980392, b: 1, a: 1}
   colorHighlightClouds: {r: 0.77361, g: 0.8599839, b: 0.957624, a: 1}
   colorSkyboxGround: {r: 0.1102941, g: 0.08836951, b: 0.06487888, a: 1}
   colorSkyboxMie: {r: 1, g: 1, b: 1, a: 1}
-  displayTime: '[ 11:08:00 AM] [ 5/27/2025 ad]'
+  displayTime: '[ 12:49:00 AM] [ 5/27/2025 ad]'
   autoTimeSync: 0
   autoDateSync: 0
   autoTime: 1
   timeCompression: 1
   currentSecond: 0
-  currentMinute: 8
-  currentHour: 11
+  currentMinute: 49
+  currentHour: 12
   currentDay: 27
   currentMonth: 5
   currentYear: 2025
@@ -59062,11 +59181,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  setHour: 11
+  setHour: 12
   useSecond: 0
   useMinute: 0
-  displayHour: 11
-  useHour: 11
+  displayHour: 12
+  useHour: 12
   useDay: 0
   useMonth: 0
   useYear: 0
@@ -59086,16 +59205,16 @@ MonoBehaviour:
   leapYear: 0
   monthFac: 31
   moonTime: {x: 0, y: 0, z: 0}
-  setDay: 36480
+  setDay: 42540
   setStar: 0.9583333
   setMoon: 82800
   setMonth: 82800
-  setYear: 146.46388
-  dayValue: 0.42222223
-  starValue: 0.41959664
-  moonValue: 0.38991877
+  setYear: 146.53403
+  dayValue: 0.4923611
+  starValue: 0.4897355
+  moonValue: 0.46005765
   monthValue: 0.032452226
-  yearValue: 0.4012709
+  yearValue: 0.4014631
   countSecond: 0
   countMinute: 0
   countSecondStar: 0
@@ -59125,11 +59244,11 @@ MonoBehaviour:
   weather_cloudSpeed: 1
   weather_OvercastDarkeningAmt: 0.451
   weather_OvercastAmt: 0.058
-  weather_RainAmt: 0.727
+  weather_RainAmt: 0
   weather_SnowAmt: 0
   weather_WindAmt: 0.04714767
   weather_WindDir: 280
-  weather_FogAmt: 1
+  weather_FogAmt: 0
   weather_FogHeight: 2000
   weather_autoForecastTime: 5
   weather_PatternTime: 10.819151
@@ -59142,8 +59261,8 @@ MonoBehaviour:
   weather_lightningRange: 180
   lightningColor: {r: 0.6898789, g: 0.78019774, b: 0.8088235, a: 0.5019608}
   ecldiff: 0
-  fogDist: 0.397039
-  atmosphereDensity: 2
+  fogDist: 0.13234633
+  atmosphereDensity: 0.5
   horizonDensity: 2.057
   horizonDensityHeight: 0.348
   fogDensity: 0.3
@@ -59362,7 +59481,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  randSeed: 1636468375
+  randSeed: 141752515
   isDoingTransition: 0
   minimumHeight: 0
 --- !u!114 &1684094502
@@ -59381,19 +59500,19 @@ MonoBehaviour:
   tzOffset: -3
   yamt: 0
   eclipticoffset: 0
-  day: 9279.547
+  day: 9279.617
   y: 2025
   m: 5
   D: 27
-  UT: 10.133333
-  LT: 8.963192
-  local_latitude: 32.0408
-  local_longitude: 52.1017
+  UT: 11.816667
+  LT: 3.7042522
+  local_latitude: -32.0408
+  local_longitude: -52.1017
   Epoch: 2000
   iteration: 1000
   moonPos: -1
-  azimuth: 282.8912
-  altitude: 34.44306
+  azimuth: 15.695888
+  altitude: 28.871195
   moonApogee: 1
   ecl: 23.435995
 --- !u!4 &1684094503
@@ -75998,11 +76117,11 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1923154241}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 0.3118512, g: 0.38451552, b: 0.41176468, a: 1}
-  m_Intensity: 0.22512451
+  m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -77023,43 +77142,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2074330004}
   m_CullTransparentMesh: 0
---- !u!84 &2089066330
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 128
-  m_Height: 128
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &2092241840
 GameObject:
   m_ObjectHideFlags: 0
@@ -77559,3 +77641,4 @@ SceneRoots:
   - {fileID: 786362297}
   - {fileID: 47241141}
   - {fileID: 999403058}
+  - {fileID: 275964313}
