@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8650878341556900448}
   - component: {fileID: 5015642368322018032}
   - component: {fileID: 8970451703131005494}
+  - component: {fileID: 6391902255141531481}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -121,9 +122,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8973473abf943c4db94cdce96a4a34c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetObject: {fileID: 3330457708501343001}
   captureCamera: {fileID: 0}
-  savePath: YOLO_Dataset
-  objectClassId: 0
-  captureKey: 113
   imageResolution: {x: 1920, y: 1200}
+  captureKey: 113
+  savePath: YOLO_Dataset
+--- !u!114 &6391902255141531481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330457708501343001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad722bc4151934a4eadc2cbf4f2b95ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classId: 1

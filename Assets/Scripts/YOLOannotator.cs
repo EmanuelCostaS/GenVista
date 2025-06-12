@@ -1,211 +1,135 @@
 using UnityEngine;
-using System.IO; // Required for file operations
-using System.Collections.Generic; // If you have multiple objects to detect in the future
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 public class YoloAnnotator : MonoBehaviour
 {
-    public GameObject targetObject; // Assign your target GameObject in the Inspector
-    public Camera captureCamera;    // Assign the camera that will be capturing the images
-    public string savePath = "YOLO_Dataset"; // Folder to save images and annotations
-    public int objectClassId = 0; // Define the class ID for your target object
-    public KeyCode captureKey = KeyCode.Space; // Key to trigger capture
-    public Vector2Int imageResolution = new Vector2Int(1920, 1200); // Desired image resolution
+    [Header("Capture Settings")]
+    public Camera captureCamera;
+    public Vector2Int imageResolution = new Vector2Int(640, 640);
+    public KeyCode captureKey = KeyCode.F12;
 
-    private void Start()
+    [Header("Save Path")]
+    public string savePath = "YOLO_Dataset";
+
+    private List<YoloObject> trackedObjects = new List<YoloObject>();
+    private string imageSavePath;
+    private string labelSavePath;
+
+    void Start()
     {
         if (captureCamera == null)
         {
-            captureCamera = Camera.main; // Default to the main camera if not assigned
+            captureCamera = Camera.main;
         }
 
-        if (targetObject == null)
+        trackedObjects.AddRange(FindObjectsByType<YoloObject>(FindObjectsSortMode.None));
+        if (trackedObjects.Count == 0)
         {
-            Debug.LogError("Target Object not assigned!");
-            enabled = false; // Disable script if no target
-            return;
+            Debug.LogWarning("YoloAnnotator: No objects with the 'YoloObject' component found in the scene. No annotations will be generated.");
+        }
+        else
+        {
+            Debug.Log($"YoloAnnotator: Found {trackedObjects.Count} trackable objects.");
         }
 
-        // Create the save directory if it doesn't exist
-        if (!Directory.Exists(Path.Combine(Application.dataPath, "..", savePath))) // Save outside Assets
-        {
-            Directory.CreateDirectory(Path.Combine(Application.dataPath, "..", savePath));
-            Directory.CreateDirectory(Path.Combine(Application.dataPath, "..", savePath, "images"));
-            Directory.CreateDirectory(Path.Combine(Application.dataPath, "..", savePath, "labels"));
-        }
+        string projectRootPath = Path.Combine(Application.dataPath, "..");
+        imageSavePath = Path.Combine(projectRootPath, savePath, "images");
+        labelSavePath = Path.Combine(projectRootPath, savePath, "labels");
+        Directory.CreateDirectory(imageSavePath);
+        Directory.CreateDirectory(labelSavePath);
+        Debug.Log($"Dataset will be saved in: {Path.Combine(projectRootPath, savePath)}");
     }
 
     void Update()
     {
         if (Input.GetKeyDown(captureKey))
         {
+            Debug.Log($"Manual capture triggered with key '{captureKey}'.");
             CaptureAndAnnotate();
         }
     }
 
     public void CaptureAndAnnotate()
     {
-        if (targetObject == null || !targetObject.activeInHierarchy)
+        if (captureCamera == null)
         {
-            Debug.LogWarning("Target object is null or inactive. Skipping capture.");
+            Debug.LogError("YoloAnnotator: Capture Camera is not set!");
             return;
         }
 
-        Renderer rend = targetObject.GetComponent<Renderer>();
-        if (rend == null || !rend.isVisible)
+        StringBuilder annotationBuilder = new StringBuilder();
+        bool objectsToAnnotateFound = false;
+
+        foreach (YoloObject obj in trackedObjects)
         {
-            Debug.LogWarning("Target object's renderer is not available or not visible. Skipping capture.");
-            return; // Object is not visible, no need to annotate
-        }
+            if (obj == null || !obj.gameObject.activeInHierarchy) continue;
 
-        Bounds bounds = rend.bounds;
-        Vector3[] corners = new Vector3[8];
-        GetBoundsCorners(bounds, corners);
+            // --- NEW DEBUG LOG ---
+            // This will tell us the name of the root object being processed.
+            Debug.Log($"[DEBUG] Processing object named: '{obj.gameObject.name}'");
 
-        float minX = float.MaxValue;
-        float minY = float.MaxValue;
-        float maxX = float.MinValue;
-        float maxY = float.MinValue;
+            Rect? boundingBox = GetObjectScreenBoundingBox(obj.gameObject);
 
-        bool objectIsInView = false;
-
-        for (int i = 0; i < 8; i++)
-        {
-            Vector3 screenPoint = captureCamera.WorldToScreenPoint(corners[i]);
-
-            // Check if the corner is in front of the camera and within screen bounds
-            if (screenPoint.z > 0) // In front of the camera
+            if (boundingBox.HasValue)
             {
-                objectIsInView = true;
-                minX = Mathf.Min(minX, screenPoint.x);
-                minY = Mathf.Min(minY, screenPoint.y);
-                maxX = Mathf.Max(maxX, screenPoint.x);
-                maxY = Mathf.Max(maxY, screenPoint.y);
+                objectsToAnnotateFound = true;
+                string yoloLine = ToYoloFormat(boundingBox.Value, obj.classId);
+                annotationBuilder.AppendLine(yoloLine);
             }
         }
 
-        // If no part of the object is in front of the camera, don't proceed
-        if (!objectIsInView)
+        if (objectsToAnnotateFound)
         {
-            Debug.Log("Target object is not in camera view. Skipping capture.");
-            return;
+            string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmmssfff");
+            SaveScreenshot(timestamp);
+            File.WriteAllText(Path.Combine(labelSavePath, $"image_{timestamp}.txt"), annotationBuilder.ToString());
         }
-
-        // Clamp values to be within screen boundaries (0 to screen width/height)
-        // Important if parts of the object are off-screen
-        minX = Mathf.Clamp(minX, 0, captureCamera.pixelWidth);
-        maxX = Mathf.Clamp(maxX, 0, captureCamera.pixelWidth);
-        minY = Mathf.Clamp(minY, 0, captureCamera.pixelHeight);
-        maxY = Mathf.Clamp(maxY, 0, captureCamera.pixelHeight);
-
-        // Check if the bounding box has a valid area
-        if (maxX <= minX || maxY <= minY)
-        {
-            Debug.LogWarning("Bounding box is invalid (e.g., object is behind other objects or completely off-screen after clamping). Skipping capture.");
-            return;
-        }
-
-        // --- Prepare for screenshot using RenderTexture ---
-        RenderTexture rt = new RenderTexture(imageResolution.x, imageResolution.y, 24);
-        captureCamera.targetTexture = rt;
-        Texture2D screenShot = new Texture2D(imageResolution.x, imageResolution.y, TextureFormat.RGB24, false);
-        captureCamera.Render(); // Render the camera's view to the RenderTexture
-
-        RenderTexture.active = rt;
-        screenShot.ReadPixels(new Rect(0, 0, imageResolution.x, imageResolution.y), 0, 0);
-        screenShot.Apply(); // Apply changes to the texture
-
-        captureCamera.targetTexture = null; // Reset camera's target texture
-        RenderTexture.active = null; // Reset active RenderTexture
-        Destroy(rt); // Clean up RenderTexture
-
-        // --- Save Image ---
-        byte[] bytes = screenShot.EncodeToPNG(); // Or EncodeToJPG()
-        string timestamp = System.DateTime.Now.ToString("yyyyMMdd_HHmmssfff");
-        string imageFileName = $"image_{timestamp}.png";
-        string imagePath = Path.Combine(Application.dataPath, "..", savePath, "images", imageFileName);
-        File.WriteAllBytes(imagePath, bytes);
-        Debug.Log($"Saved Image: {imagePath}");
-
-        // --- Calculate YOLO Annotation ---
-        // Note: Screen coordinates (0,0) are bottom-left. YOLO needs top-left.
-        // And coordinates need to be normalized by the CAPTURED image dimensions (imageResolution)
-
-        float boxWidth = maxX - minX;
-        float boxHeight = maxY - minY;
-
-        // Adjust min/max X and Y based on how much the actual camera view (captureCamera.pixelWidth/Height)
-        // maps to the target imageResolution. This is important if the camera's aspect ratio
-        // doesn't match the imageResolution aspect ratio, or if you're rendering a sub-region.
-        // For this script, we assume the RenderTexture matches the desired output, so we normalize against imageResolution.
-
-        float normXCenter = (minX + boxWidth / 2f) / imageResolution.x;
-        // YOLO Y is from top, Unity screen Y is from bottom.
-        float normYCenter = ((imageResolution.y - maxY) + boxHeight / 2f) / imageResolution.y;
-        float normWidth = boxWidth / imageResolution.x;
-        float normHeight = boxHeight / imageResolution.y;
-
-        // Clamp normalized values to be between 0 and 1, just in case
-        normXCenter = Mathf.Clamp01(normXCenter);
-        normYCenter = Mathf.Clamp01(normYCenter);
-        normWidth = Mathf.Clamp01(normWidth);
-        normHeight = Mathf.Clamp01(normHeight);
-
-
-        //string annotation = $"{objectClassId} {normXCenter} {normYCenter} {normWidth} {normHeight}";
-        string annotation = string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                                  "{0} {1:F6} {2:F6} {3:F6} {4:F6}",
-                                  objectClassId,
-                                  normXCenter,
-                                  normYCenter,
-                                  normWidth,
-                                  normHeight);
-
-        // --- Save Annotation ---
-        string annotationFileName = $"image_{timestamp}.txt";
-        string annotationPath = Path.Combine(Application.dataPath, "..", savePath, "labels", annotationFileName);
-        File.WriteAllText(annotationPath, annotation);
-        Debug.Log($"Saved Annotation: {annotationPath}");
-
-        Destroy(screenShot); // Clean up Texture2D
     }
 
-    // Helper to get the 8 corners of a bounds
-    void GetBoundsCorners(Bounds bounds, Vector3[] corners)
+    private Rect? GetObjectScreenBoundingBox(GameObject obj)
     {
-        Vector3 center = bounds.center;
-        Vector3 extents = bounds.extents;
+        var meshFilters = obj.GetComponentsInChildren<MeshFilter>();
+        var renderers = obj.GetComponentsInChildren<Renderer>();
 
-        corners[0] = new Vector3(center.x - extents.x, center.y - extents.y, center.z - extents.z);
-        corners[1] = new Vector3(center.x + extents.x, center.y - extents.y, center.z - extents.z);
-        corners[2] = new Vector3(center.x - extents.x, center.y - extents.y, center.z + extents.z);
-        corners[3] = new Vector3(center.x + extents.x, center.y - extents.y, center.z + extents.z);
-        corners[4] = new Vector3(center.x - extents.x, center.y + extents.y, center.z - extents.z);
-        corners[5] = new Vector3(center.x + extents.x, center.y + extents.y, center.z - extents.z);
-        corners[6] = new Vector3(center.x - extents.x, center.y + extents.y, center.z + extents.z);
-        corners[7] = new Vector3(center.x + extents.x, center.y + extents.y, center.z + extents.z);
-    }
-
-    // Optional: Gizmos to visualize the bounding box in the editor
-    void OnDrawGizmos()
-    {
-        if (targetObject != null && captureCamera != null)
+        // --- NEW DEBUG LOG ---
+        // This will tell us exactly which meshes the script finds inside the root object.
+        Debug.Log($"[DEBUG] -- The object '{obj.name}' contains {meshFilters.Length} mesh(es).");
+        foreach (var mf in meshFilters)
         {
-            Renderer rend = targetObject.GetComponent<Renderer>();
-            if (rend == null || !rend.isVisible) return;
+            Debug.Log($"[DEBUG] ---- Found mesh on child GameObject: '{mf.gameObject.name}'");
+        }
 
-            Bounds bounds = rend.bounds;
-            Vector3[] corners = new Vector3[8];
-            GetBoundsCorners(bounds, corners);
 
-            float minX = float.MaxValue;
-            float minY = float.MaxValue;
-            float maxX = float.MinValue;
-            float maxY = float.MinValue;
-            bool objectIsInView = false;
-
-            for (int i = 0; i < 8; i++)
+        bool isAnyPartVisible = false;
+        foreach (var r in renderers)
+        {
+            if (r.isVisible)
             {
-                Vector3 screenPoint = captureCamera.WorldToScreenPoint(corners[i]);
+                isAnyPartVisible = true;
+                break;
+            }
+        }
+
+        if (meshFilters.Length == 0 || !isAnyPartVisible)
+        {
+            return null;
+        }
+
+        float minX = float.MaxValue, minY = float.MaxValue, maxX = float.MinValue, maxY = float.MinValue;
+        bool objectIsInView = false;
+
+        foreach (var meshFilter in meshFilters)
+        {
+            Vector3[] vertices = meshFilter.mesh.vertices;
+            if (vertices.Length == 0) continue;
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Vector3 worldPoint = meshFilter.transform.TransformPoint(vertices[i]);
+                Vector3 screenPoint = captureCamera.WorldToScreenPoint(worldPoint);
+
                 if (screenPoint.z > 0)
                 {
                     objectIsInView = true;
@@ -215,30 +139,55 @@ public class YoloAnnotator : MonoBehaviour
                     maxY = Mathf.Max(maxY, screenPoint.y);
                 }
             }
-
-            if (!objectIsInView) return;
-
-            minX = Mathf.Clamp(minX, 0, captureCamera.pixelWidth);
-            maxX = Mathf.Clamp(maxX, 0, captureCamera.pixelWidth);
-            minY = Mathf.Clamp(minY, 0, captureCamera.pixelHeight);
-            maxY = Mathf.Clamp(maxY, 0, captureCamera.pixelHeight);
-
-            if (maxX <= minX || maxY <= minY) return;
-
-
-            // Draw Gizmo rectangle on screen (only works in Game View with Gizmos enabled)
-            // This is a bit tricky as Gizmos draw in world space.
-            // A more robust visualization would be to use an OnGUI call or a UI Panel.
-
-            // For simplicity, let's draw the world space bounds
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(bounds.center, bounds.size);
-
-            // And lines from camera to screen box corners (approximate)
-            // This part is more complex to draw accurately in screen space with Gizmos.
-            // Consider drawing a UI rectangle instead for precise screen space visualization.
-            // Rect screenRect = new Rect(minX, minY, maxX - minX, maxY - minY);
-            // Debug.Log("Screen BBox (approx): " + screenRect); // Log for checking
         }
+
+        if (!objectIsInView)
+        {
+            return null;
+        }
+        
+        minX = Mathf.Clamp(minX, 0, imageResolution.x);
+        maxX = Mathf.Clamp(maxX, 0, imageResolution.x);
+        minY = Mathf.Clamp(minY, 0, imageResolution.y);
+        maxY = Mathf.Clamp(maxY, 0, imageResolution.y);
+
+        if (maxX <= minX || maxY <= minY)
+        {
+            return null;
+        }
+
+        return new Rect(minX, minY, maxX - minX, maxY - minY);
+    }
+
+    private string ToYoloFormat(Rect rect, int classId)
+    {
+        float normXCenter = (rect.x + rect.width / 2f) / imageResolution.x;
+        float normYCenter = 1f - ((rect.y + rect.height / 2f) / imageResolution.y);
+        float normWidth = rect.width / imageResolution.x;
+        float normHeight = rect.height / imageResolution.y;
+
+        return string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                             "{0} {1:F6} {2:F6} {3:F6} {4:F6}",
+                             classId, normXCenter, normYCenter, normWidth, normHeight);
+    }
+
+    private void SaveScreenshot(string timestamp)
+    {
+        RenderTexture rt = new RenderTexture(imageResolution.x, imageResolution.y, 24);
+        captureCamera.targetTexture = rt;
+        Texture2D screenShot = new Texture2D(imageResolution.x, imageResolution.y, TextureFormat.RGB24, false);
+        captureCamera.Render();
+        RenderTexture.active = rt;
+        screenShot.ReadPixels(new Rect(0, 0, imageResolution.x, imageResolution.y), 0, 0);
+        screenShot.Apply();
+        
+        byte[] bytes = screenShot.EncodeToPNG();
+        string fileName = $"image_{timestamp}.png";
+        File.WriteAllBytes(Path.Combine(imageSavePath, fileName), bytes);
+
+        captureCamera.targetTexture = null;
+        RenderTexture.active = null;
+        Destroy(rt);
+        Destroy(screenShot);
     }
 }
