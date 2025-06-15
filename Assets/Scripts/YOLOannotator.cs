@@ -11,7 +11,7 @@ public class YoloAnnotator : MonoBehaviour
     public KeyCode captureKey = KeyCode.F12;
 
     [Header("Save Path")]
-    public string savePath = "YOLO_Dataset";
+    public string savePath = "YOLO_Dataset/8h";
 
     private List<YoloObject> trackedObjects = new List<YoloObject>();
     private string imageSavePath;

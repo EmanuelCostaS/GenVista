@@ -1287,6 +1287,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sphere (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3330457708501343001, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalScale.x
       value: 3
@@ -1305,7 +1309,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 972
+      value: 969.7
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7850,7 +7854,7 @@ RectTransform:
   m_AnchoredPosition: {x: -160, y: 60}
   m_SizeDelta: {x: 253, y: 56}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!84 &440221394
+--- !u!84 &449361244
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7995,6 +7999,43 @@ Transform:
   - {fileID: 1924332564}
   m_Father: {fileID: 1627134770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!84 &485248008
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 128
+  m_Height: 128
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &485728232
 GameObject:
   m_ObjectHideFlags: 0
@@ -8404,7 +8445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: 0
-  renderTexDiff: {fileID: 440221394}
+  renderTexDiff: {fileID: 485248008}
 --- !u!20 &542200256
 Camera:
   m_ObjectHideFlags: 0
@@ -8415,7 +8456,7 @@ Camera:
   m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.39735302, g: 0.46529418, b: 0.52294123, a: 0.6}
+  m_BackGroundColor: {r: 0.22705886, g: 0.26588237, b: 0.29882357, a: 0.6}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -24461,27 +24502,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6187477242137282627, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: speed
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -6187477242137282627, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: radius
-      value: 15
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3330457708501343001, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_Name
       value: Sphere (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3330457708501343001, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalScale.z
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.x
@@ -24489,11 +24534,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1064
+      value: 1089.1
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 338.3
+      value: 861
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -51385,7 +51430,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.39735302, g: 0.46529418, b: 0.52294123, a: 0.6}
+  m_BackGroundColor: {r: 0.22705886, g: 0.26588237, b: 0.29882357, a: 0.6}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -51878,7 +51923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: 1
-  renderTexDiff: {fileID: 1391232823}
+  renderTexDiff: {fileID: 449361244}
 --- !u!20 &1341923166
 Camera:
   m_ObjectHideFlags: 0
@@ -52091,13 +52136,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6187477242137282627, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: speed
+      value: 2.7
+      objectReference: {fileID: 0}
+    - target: {fileID: -6187477242137282627, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: radius
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: -6187477242137282627, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: direction
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 3330457708501343001, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_Name
       value: Sphere (1)
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21
+      value: 13.2
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.y
@@ -52105,7 +52174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 42
+      value: 120.4
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -52331,43 +52400,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1391232823
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 128
-  m_Height: 128
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1392660323
 GameObject:
   m_ObjectHideFlags: 0
@@ -52798,6 +52830,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sphere (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3330457708501343001, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.5
@@ -53116,12 +53152,12 @@ MonoBehaviour:
   playerController: {fileID: 1759204268}
   yoloAnnotator: {fileID: 1469646174}
   toggleAutomationKey: 112
-  totalAutomationDuration: 120
-  captureInterval: 2
+  totalAutomationDuration: 600
+  captureInterval: 1.5
   movementChangeInterval: 3
   chanceToMoveForward: 1
   chanceToMoveSideways: 0
-  chanceToAttemptJumpOrFlyUp: 0.01
+  chanceToAttemptJumpOrFlyUp: 0.1
   chanceToAttemptDescend: 0.95
 --- !u!114 &1469646174
 MonoBehaviour:
@@ -59345,8 +59381,8 @@ MonoBehaviour:
   mieAmount: 0
   mieMnAmount: 0.3
   nightBrightness: 0.134
-  fogDistance: 39703
-  fogAtmosphere: 10000
+  fogDistance: 3000
+  fogAtmosphere: 2000
   fadeDistance: 0.3
   fogObscurance: 0.3
   setRotation: 180
@@ -59404,7 +59440,7 @@ MonoBehaviour:
   colorHighlightClouds: {r: 1, g: 0.9263153, b: 0.7391163, a: 1}
   colorSkyboxGround: {r: 0.1102941, g: 0.08836951, b: 0.06487888, a: 1}
   colorSkyboxMie: {r: 1, g: 1, b: 1, a: 1}
-  displayTime: '[ 13:00:00 PM] [ 12/25/2025 ad]'
+  displayTime: '[ 13:00:00 ] [ 12/25/2025 ad]'
   autoTimeSync: 0
   autoDateSync: 0
   autoTime: 1
@@ -59417,7 +59453,7 @@ MonoBehaviour:
   currentYear: 2025
   useAutoTime: 1
   useTimeCompression: 0
-  use24Clock: 1
+  use24Clock: 0
   timeCurves:
     serializedVersion: 2
     m_Curve:
@@ -59445,12 +59481,12 @@ MonoBehaviour:
   setHour: 13
   useSecond: 0
   useMinute: 0
-  displayHour: 1
+  displayHour: 13
   useHour: 13
   useDay: 0
   useMonth: 0
   useYear: 0
-  hourMode: PM
+  hourMode: 
   moonSecond: 0
   moonMinute: 0
   moonHour: 24
@@ -59509,7 +59545,7 @@ MonoBehaviour:
   weather_SnowAmt: 0
   weather_WindAmt: 0.04714767
   weather_WindDir: 280
-  weather_FogAmt: 0.1
+  weather_FogAmt: 0.5
   weather_FogHeight: 2000
   weather_autoForecastTime: 5
   weather_PatternTime: 10.819151
@@ -59522,8 +59558,8 @@ MonoBehaviour:
   weather_lightningRange: 180
   lightningColor: {r: 0.6898789, g: 0.78019774, b: 0.8088235, a: 0.5019608}
   ecldiff: 0
-  fogDist: 0.0794078
-  atmosphereDensity: 0.5
+  fogDist: 0.0060018
+  atmosphereDensity: 2
   horizonDensity: 2.057
   horizonDensityHeight: 0.348
   fogDensity: 0.3
@@ -59742,7 +59778,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  randSeed: 947892265
+  randSeed: 39729828
   isDoingTransition: 0
   minimumHeight: 0
 --- !u!114 &1684094502
@@ -77865,9 +77901,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sphere
       objectReference: {fileID: 0}
+    - target: {fileID: 3330457708501343001, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 3995846038506187511, guid: 55b84b5992571c64e9954f7503af48af, type: 3}
       propertyPath: m_LocalPosition.y
@@ -77987,7 +78027,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7213642468756732396, guid: e104179d8253d3e449ad2b2640ea6138, type: 3}
       propertyPath: moveSpeed
-      value: 10
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
