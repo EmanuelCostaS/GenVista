@@ -47,6 +47,8 @@ sysinfo.txt
 *.aab
 *.app
 
+/YOLO_Dataset
+
 # Addressables and StreamingAssets (optional - uncomment if large or auto-generated)
 # Assets/StreamingAssets/
 # Assets/AddressableAssetsData/*/*.bin*

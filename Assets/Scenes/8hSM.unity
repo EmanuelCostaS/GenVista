@@ -7215,6 +7215,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 326602493}
   m_CullTransparentMesh: 0
+--- !u!84 &328357947
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 128
+  m_Height: 128
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!4 &336202581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1105920777886653021, guid: e104179d8253d3e449ad2b2640ea6138, type: 3}
@@ -7337,7 +7374,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.9843052, g: 0.9480411, b: 0.852679, a: 0.9843052}
+  m_Color: {r: 0.88973475, g: 0.93412495, b: 0.98058885, a: 0.9843052}
   m_Intensity: 1.3386551
   m_Range: 10
   m_SpotAngle: 30
@@ -8286,7 +8323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: 0
-  renderTexDiff: {fileID: 1200132748}
+  renderTexDiff: {fileID: 1529370461}
 --- !u!20 &542200256
 Camera:
   m_ObjectHideFlags: 0
@@ -25201,7 +25238,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1049117153
 Transform:
   m_ObjectHideFlags: 0
@@ -50348,7 +50385,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1183261426
 Transform:
   m_ObjectHideFlags: 0
@@ -50452,43 +50489,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1199214249}
   m_CullTransparentMesh: 0
---- !u!84 &1200132748
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 128
-  m_Height: 128
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1200560150
 GameObject:
   m_ObjectHideFlags: 0
@@ -51698,7 +51698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraType: 1
-  renderTexDiff: {fileID: 1399018007}
+  renderTexDiff: {fileID: 328357947}
 --- !u!20 &1341923166
 Camera:
   m_ObjectHideFlags: 0
@@ -52302,43 +52302,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1393224937}
   m_CullTransparentMesh: 0
---- !u!84 &1399018007
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 128
-  m_Height: 128
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 48
-  m_MipMap: 1
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1427338507
 GameObject:
   m_ObjectHideFlags: 0
@@ -57864,6 +57827,43 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!84 &1529370461
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 128
+  m_Height: 128
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 48
+  m_MipMap: 1
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &1559465295
 GameObject:
   m_ObjectHideFlags: 0
@@ -58739,7 +58739,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684094500}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c655283bae7f774188bb4c7bde76095, type: 3}
   m_Name: 
@@ -58753,7 +58753,7 @@ MonoBehaviour:
   cameraTypeIndex: 0
   ambientTypeIndex: 0
   atmosphereModelTypeIndex: 1
-  useAtmosphereIndex: 1
+  useAtmosphereIndex: -1
   cloudGradient:
     serializedVersion: 2
     key0: {r: 0, g: 0, b: 0, a: 1}
@@ -59058,7 +59058,7 @@ MonoBehaviour:
   lightLayerMask:
     serializedVersion: 2
     m_Bits: 0
-  temperatureColor: {r: 1, g: 0.9263153, b: 0.7391163, a: 1}
+  temperatureColor: {r: 0.80784315, g: 0.8980392, b: 1, a: 1}
   colorOverlay: {r: 1, g: 1, b: 1, a: 1}
   colorSky: {r: 0.7809797, g: 0.9225778, b: 0.99264705, a: 0.25490198}
   colorAmbient: {r: 0, g: 0, b: 0, a: 0.23529412}
@@ -59148,8 +59148,8 @@ MonoBehaviour:
   colorHorizon: {r: 0.7225353, g: 0.97199774, b: 1.1750166, a: 1.1843052}
   colorHorizonLow: {r: 0.7225353, g: 0.97199774, b: 1.1750166, a: 1.1843052}
   colorSkyAmbient: {r: 1, g: 1, b: 1, a: 1}
-  colorClouds: {r: 1, g: 0.9263153, b: 0.7391163, a: 1}
-  colorHighlightClouds: {r: 0.957624, g: 0.8870618, b: 0.70779556, a: 1}
+  colorClouds: {r: 0.80784315, g: 0.8980392, b: 1, a: 1}
+  colorHighlightClouds: {r: 0.77361, g: 0.8599839, b: 0.957624, a: 1}
   colorSkyboxGround: {r: 0.1102941, g: 0.08836951, b: 0.06487888, a: 1}
   colorSkyboxMie: {r: 1, g: 1, b: 1, a: 1}
   displayTime: '[ 12:49:00 AM] [ 5/27/2025 ad]'
@@ -59490,7 +59490,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  randSeed: 944825515
+  randSeed: 747387609
   isDoingTransition: 0
   minimumHeight: 0
 --- !u!114 &1684094502
