@@ -241,4 +241,59 @@ public class Movement : MonoBehaviour
             Gizmos.DrawRay(transform.position, Vector3.down * (playerHeight * 0.5f + 0.2f));
         }
     }
+
+    // CALL THIS TO RESET PLAYER POSITION/PHYSICS
+    public void ForceTeleport(Vector3 newPos, Quaternion newRot)
+    {
+        // 1. Move Transform
+        transform.position = newPos;
+        transform.rotation = newRot;
+
+        // 2. Kill Physics Momentum (prevents drifting after teleport)
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero; 
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        // 3. Reset state flags
+        isFlyingMode = false;
+        readyToJump = true;
+    }
+
+    // Inside Movement class
+    public void ForceReset(Vector3 newPos, Quaternion newRot)
+    {
+        transform.position = newPos;
+        transform.rotation = newRot;
+        
+        // Kill physics momentum
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero; 
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        isFlyingMode = false;
+        readyToJump = true;
+        
+        // Also reset the orientation object if it exists
+        if(orientation != null)
+        {
+            orientation.rotation = Quaternion.Euler(0, newRot.eulerAngles.y, 0);
+        }
+    }
+
+    public void SetFlyingState(bool state)
+    {
+        isFlyingMode = state;
+        
+        if (rb != null)
+        {
+            rb.useGravity = !state; // Turn off gravity immediately
+            // Lift the player slightly so they aren't touching the ground (prevents friction)
+            if(state) transform.position += Vector3.up * 1.0f; 
+        }
+    }
+
 }

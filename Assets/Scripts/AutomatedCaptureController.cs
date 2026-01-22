@@ -1,175 +1,238 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+
+[System.Serializable]
+public struct ScenarioLocation
+{
+    public string name; 
+    public double latitude;
+    public double longitude;
+    public double height;
+}
 
 public class AutomatedCaptureController : MonoBehaviour
 {
-    [Header("Target References")]
-    // Note: Ensure this class name matches your movement script. We've used 'Player' previously.
+    [Header("References")]
     public Movement playerController; 
+    public PlayerCam playerCamScript; // DRAG "PlayerCam" SCRIPT HERE
     public YoloAnnotator yoloAnnotator;
+    public CesiumTeleport cesiumTeleporter; 
+    public ObjectSpawner objectSpawner;
+    public TenkokuAutomation weatherAutomation; 
 
-    [Header("Automation Settings")]
+    [Header("Automation Flow")]
     public KeyCode toggleAutomationKey = KeyCode.P;
-    public float totalAutomationDuration = 120f;
     public float captureInterval = 2.0f;
-    public float movementChangeInterval = 3.0f;
+    
+    [Header("Scenario Settings")]
+    public int capturesPerLocation = 200;
+    public float cesiumLoadDelay = 5.0f;
+    public List<ScenarioLocation> scenarioList;
 
-    [Header("Movement Behavior")]
-    [Range(0f, 1f)] public float chanceToMoveForward = 0.7f;
-    [Range(0f, 1f)] public float chanceToMoveSideways = 0.5f;
-    [Range(0f, 1f)] public float chanceToAttemptJumpOrFlyUp = 0.1f;
-    [Range(0f, 1f)] public float chanceToAttemptDescend = 0.05f;
-
-    private float timeSinceLastCapture = 0f;
-    private float timeSinceLastMovementChange = 0f;
-    private float currentSessionElapsedTime = 0f;
+    // Internal State
     private bool isAutomationRunning = false;
+    private bool isWaitingForTiles = false;
+    private float timeSinceLastCapture = 0f;
+    private float loadTimer = 0f;
+    private int currentCaptureCount = 0;
+    private int currentLocationIndex = 0;
+
+    // We store the LOCAL position relative to the parent (or world origin if no parent)
+    private Vector3 startLocalPosition;
+    private Quaternion startRotation;
 
     void Start()
     {
-        if (playerController == null)
+        if (playerController != null)
         {
-            Debug.LogError("PlayerController not assigned to AutomatedCaptureController!", this);
-            this.enabled = false;
-            return;
+            // Save the exact spot where you placed the player
+            startLocalPosition = playerController.transform.position;
+            startRotation = playerController.transform.rotation;
         }
-        if (yoloAnnotator == null)
-        {
-            Debug.LogError("YoloAnnotator not assigned to AutomatedCaptureController!", this);
-            this.enabled = false;
-            return;
-        }
-
-        // --------------------------------------------------------------------
-        // ---- THIS ENTIRE BLOCK OF CODE HAS BEEN REMOVED ----
-        //
-        // The new YoloAnnotator automatically finds all objects with the
-        // YoloObject component, so this logic is no longer needed.
-        //
-        // if (yoloAnnotator.targetObject == null) { ... }
-        //
-        // --------------------------------------------------------------------
     }
 
     void Update()
     {
-        // Toggle Automation
         if (Input.GetKeyDown(toggleAutomationKey))
         {
-            if (isAutomationRunning)
-            {
-                StopAutomation();
-            }
-            else
-            {
-                StartAutomation();
-            }
+            if(!isAutomationRunning) StartAutomation();
+            else StopAutomation();
         }
 
-        if (!isAutomationRunning)
-            return;
+        if (!isAutomationRunning) return;
 
-        // --- Update session timer ---
-        currentSessionElapsedTime += Time.deltaTime;
-        if (currentSessionElapsedTime > totalAutomationDuration)
+        // 1. WAIT FOR TILES TO LOAD
+        if (isWaitingForTiles)
         {
-            Debug.Log("Total automation duration reached.");
-            StopAutomation();
-            return;
+            loadTimer += Time.deltaTime;
+            
+            // While waiting, FORCE player to stay still at the start position
+            if (playerController != null)
+            {
+                playerController.ForceReset(startLocalPosition, startRotation);
+                // Ensure flying is ON so we don't fall
+                playerController.SetFlyingState(true); 
+            }
+
+            if (loadTimer >= cesiumLoadDelay)
+            {
+                isWaitingForTiles = false;
+                Debug.Log("[Automation] Tiles loaded. Starting Flight.");
+            }
+            return; 
         }
 
-        // --- Handle Movement ---
-        timeSinceLastMovementChange += Time.deltaTime;
-        if (timeSinceLastMovementChange >= movementChangeInterval)
-        {
-            UpdateAutomaticMovement();
-            timeSinceLastMovementChange = 0f;
-        }
+        // 2. MOVE FORWARD (FLY)
+        UpdateStraightLineMovement();
 
-        // --- Handle Capture ---
+        // 3. CAPTURE LOGIC
         timeSinceLastCapture += Time.deltaTime;
+        
+        // Update Weather
+        if (weatherAutomation != null && capturesPerLocation > 0)
+        {
+            float progress = (float)currentCaptureCount / (float)capturesPerLocation;
+            weatherAutomation.SetWeatherProgress(progress);
+        }
+
+        // Take Photo
         if (timeSinceLastCapture >= captureInterval)
         {
-            if (playerController.gameObject.activeInHierarchy && yoloAnnotator.enabled)
-            {
-                yoloAnnotator.CaptureAndAnnotate();
-            }
+            yoloAnnotator.CaptureAndAnnotate();
             timeSinceLastCapture = 0f;
+            currentCaptureCount++;
+
+            if(currentCaptureCount % 10 == 0) 
+                Debug.Log($"[Automation] Capture {currentCaptureCount}/{capturesPerLocation}");
+
+            if (currentCaptureCount >= capturesPerLocation)
+            {
+                MoveToNextLocation();
+            }
         }
     }
 
     void StartAutomation()
     {
-        if (playerController == null || yoloAnnotator == null)
-        {
-            Debug.LogError("Cannot start automation: PlayerController or YoloAnnotator is missing.", this);
-            return;
-        }
-
-        Debug.Log("Starting automated capture session. Press '" + toggleAutomationKey.ToString() + "' to stop.");
+        if (!playerController || !yoloAnnotator) return;
+        
         isAutomationRunning = true;
         playerController.useExternalInput = true;
-
-        currentSessionElapsedTime = 0f;
-        timeSinceLastCapture = captureInterval;
-        timeSinceLastMovementChange = movementChangeInterval;
-    }
-
-    void UpdateAutomaticMovement()
-    {
-        if (!playerController) return;
-
-        playerController.externalVerticalInput = (Random.value < chanceToMoveForward) ? Random.Range(0.5f, 1f) : 0f;
-        if (Random.value < chanceToMoveSideways)
+        
+        // 1. DISABLE MOUSE LOOK
+        if (playerCamScript != null)
         {
-            playerController.externalHorizontalInput = Random.Range(-1f, 1f);
+            playerCamScript.ResetCameraRotation(startRotation); 
+            playerCamScript.enabled = false;
+        }
+
+        // 2. FORCE FLYING MODE (Fixes "Only Walking" bug)
+        playerController.SetFlyingState(true);
+
+        // 3. TELEPORT TO FIRST LOCATION
+        currentCaptureCount = 0;
+        if (scenarioList.Count > 0)
+        {
+            currentLocationIndex = 0; 
+            TeleportToLocation(scenarioList[0]);
         }
         else
         {
-            playerController.externalHorizontalInput = 0f;
+            Debug.LogWarning("[Automation] No scenarios! Resetting to start.");
+            ResetPlayerState();
+            isWaitingForTiles = true; // Wait a bit anyway to let physics settle
+            loadTimer = 0f;
+        }
+        
+        Debug.Log("Automation Started.");
+    }
+
+    void MoveToNextLocation()
+    {
+        currentLocationIndex++;
+
+        if (currentLocationIndex >= scenarioList.Count)
+        {
+            Debug.Log("[Automation] Scenario Complete! Stopping.");
+            StopAutomation();
+            return;
         }
 
-        playerController.externalJumpKeyActive = false;
-        playerController.externalDescendKeyActive = false;
+        TeleportToLocation(scenarioList[currentLocationIndex]);
+    }
 
-        if (Random.value < chanceToAttemptJumpOrFlyUp)
+    void TeleportToLocation(ScenarioLocation loc)
+    {
+        Debug.Log($"[Automation] Moving to {loc.name} -> Lat: {loc.latitude}, Lon: {loc.longitude}");
+
+        // 1. Move World (Cesium)
+        if (cesiumTeleporter != null)
         {
-            if (playerController.grounded)
-            {
-                playerController.TriggerExternalJump();
-            }
-            else
-            {
-                playerController.externalJumpKeyActive = true;
-            }
+            cesiumTeleporter.JumpToLocation(loc.latitude, loc.longitude, loc.height);
         }
 
-        if (playerController.isFlyingMode && !playerController.externalJumpKeyActive && Random.value < chanceToAttemptDescend)
+        // 2. Reset Player Position
+        // IMPORTANT: We reset to the SAVED position relative to the new world center.
+        ResetPlayerState();
+
+        // 3. Reset Spawner & Weather
+        if (objectSpawner != null) objectSpawner.ResetSpawner();
+        if (weatherAutomation != null) weatherAutomation.GenerateRandomWeatherScenario();
+
+        // 4. Reset Timers
+        currentCaptureCount = 0;
+        isWaitingForTiles = true;
+        loadTimer = 0f;
+    }
+
+    void ResetPlayerState()
+    {
+        if (playerController != null)
         {
-            playerController.externalDescendKeyActive = true;
+            // Snap to start position
+            playerController.ForceReset(startLocalPosition, startRotation);
+            // Ensure gravity is OFF and flying is ON
+            playerController.SetFlyingState(true);
+        }
+
+        // Reset Camera Angle
+        if (playerCamScript != null)
+        {
+            playerCamScript.ResetCameraRotation(startRotation);
+        }
+    }
+
+    void UpdateStraightLineMovement()
+    {
+        if (!playerController) return;
+        
+        // Constant forward input
+        playerController.externalVerticalInput = 1f; 
+        playerController.externalHorizontalInput = 0f; 
+        
+        // Redundancy: Ensure flying mode stays ON every frame
+        if (!playerController.isFlyingMode)
+        {
+            playerController.SetFlyingState(true);
         }
     }
 
     void StopAutomation()
     {
-        Debug.Log("Automated capture session stopped. Press '" + toggleAutomationKey.ToString() + "' to start again.");
         isAutomationRunning = false;
-        if (playerController != null)
+        
+        if (playerController) 
         {
             playerController.useExternalInput = false;
-            playerController.externalHorizontalInput = 0f;
             playerController.externalVerticalInput = 0f;
-            playerController.externalJumpKeyActive = false;
-            playerController.externalDescendKeyActive = false;
+            playerController.SetFlyingState(false); // Turn gravity back on when done?
         }
-    }
 
-    void OnDisable()
-    {
-        if (isAutomationRunning)
+        if (playerCamScript != null)
         {
-            Debug.Log("AutomatedCaptureController component disabled, stopping automation.");
-            StopAutomation();
+            playerCamScript.enabled = true;
         }
+        
+        Debug.Log("Automation Stopped.");
     }
 }

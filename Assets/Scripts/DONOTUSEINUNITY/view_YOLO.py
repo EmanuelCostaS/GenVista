@@ -2,116 +2,122 @@ import cv2
 import numpy as np
 import os
 
-def visualize_yolo(image_path, label_path, class_names, max_display_size=(1600, 900)):
+def visualize_yolo_annotations(image_path: str, label_path: str, class_names: list):
     """
-    Visualizes YOLO bounding boxes on an image with a resizable window.
+    Reads an image and its corresponding YOLO-format annotation file,
+    and displays the image with bounding boxes drawn.
 
     Args:
-        image_path (str): Path to the image file.
-        label_path (str): Path to the YOLO label file.
-        class_names (list): A list of strings representing the class names.
-        max_display_size (tuple): A tuple (max_width, max_height) for the initial display.
+        image_path (str): Full path to the image file.
+        label_path (str): Full path to the YOLO label file (.txt).
+        class_names (list): A list of strings where the index corresponds
+                            to the class ID (e.g., class_names[0] is the name for ID 0).
     """
-    # --- 1. Read the Image ---
-    try:
-        image = cv2.imread(image_path)
-        if image is None:
-            print(f"Error: Could not read image at {image_path}")
-            return
-        height, width, _ = image.shape
-    except Exception as e:
-        print(f"An error occurred while reading the image: {e}")
+    # 1. Load the image
+    if not os.path.exists(image_path):
+        print(f"Error: Image file not found at {image_path}")
+        return
+    
+    img = cv2.imread(image_path)
+    if img is None:
+        print(f"Error: Could not load image from {image_path}")
         return
 
-    # --- 2. Read the YOLO Annotation File ---
+    # Get image dimensions
+    H, W, _ = img.shape
+    
+    print(f"Image loaded with dimensions: W={W}, H={H}")
+    
+    # 2. Load the annotations
+    if not os.path.exists(label_path):
+        print(f"Warning: Label file not found at {label_path}. Displaying image without boxes.")
+        cv2.imshow("YOLO Visualization", img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        return
+
+    annotations = []
     try:
         with open(label_path, 'r') as f:
-            lines = f.readlines()
-    except FileNotFoundError:
-        print(f"Error: Label file not found at {label_path}")
-        return
+            for line in f:
+                # Format: class_id center_x center_y width height (all normalized to 0-1)
+                parts = line.strip().split()
+                if len(parts) == 5:
+                    annotations.append([float(p) for p in parts])
     except Exception as e:
-        print(f"An error occurred while reading the label file: {e}")
+        print(f"Error reading label file: {e}")
         return
 
-    # --- 3. Parse and Draw Bounding Boxes ---
-    for line in lines:
-        parts = line.strip().split()
-        if len(parts) == 5:
-            class_id, x_center, y_center, box_width, box_height = map(float, parts)
-            class_id = int(class_id)
-
-            # --- 4. Convert YOLO coordinates to pixel coordinates ---
-            x_center_px = int(x_center * width)
-            y_center_px = int(y_center * height)
-            box_width_px = int(box_width * width)
-            box_height_px = int(box_height * height)
-
-            x_min = int(x_center_px - (box_width_px / 2))
-            y_min = int(y_center_px - (box_height_px / 2))
-            x_max = int(x_center_px + (box_width_px / 2))
-            y_max = int(y_center_px + (box_height_px / 2))
-
-            # --- 5. Draw the Bounding Box and Label ---
-            if class_id < len(class_names):
-                class_name = class_names[class_id]
-                color = (0, 255, 0) # Green
-                cv2.rectangle(image, (x_min, y_min), (x_max, y_max), color, 2)
-
-                label = f'{class_name}'
-                (label_width, label_height), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
-                cv2.rectangle(image, (x_min, y_min - label_height - 10), (x_min + label_width, y_min), color, -1)
-                cv2.putText(image, label, (x_min, y_min - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-            else:
-                print(f"Warning: class_id {class_id} is out of range for the provided class_names.")
-
-    # --- 6. CHANGE START: Create a resizable window and scale the image if it's too large ---
+    # 3. Process and draw bounding boxes
+    print(f"Found {len(annotations)} annotations.")
     
-    # Create a window that can be resized by the user
-    window_name = 'YOLO Visualization'
-    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+    for anno in annotations:
+        class_id, center_x_norm, center_y_norm, width_norm, height_norm = anno
+        class_id = int(class_id)
+        
+        # Denormalize coordinates to pixel values
+        center_x = int(center_x_norm * W)
+        center_y = int(center_y_norm * H)
+        box_width = int(width_norm * W)
+        box_height = int(height_norm * H)
+        
+        # Convert center/width/height to top-left (x_min, y_min) and bottom-right (x_max, y_max)
+        x_min = int(center_x - box_width / 2)
+        y_min = int(center_y - box_height / 2)
+        x_max = int(center_x + box_width / 2)
+        y_max = int(center_y + box_height / 2)
 
-    # Get the screen-friendly dimensions
-    display_height, display_width = image.shape[:2]
-    max_height, max_width = max_display_size[1], max_display_size[0]
+        # Get class name and color
+        class_name = class_names[class_id] if class_id < len(class_names) else f"Unknown Class {class_id}"
+        
+        # Use a consistent color for the box and text (e.g., green in BGR)
+        color = (0, 255, 0) 
+        thickness = 2
 
-    # Check if the image is larger than the max display size
-    if display_height > max_height or display_width > max_width:
-        # Calculate the ratio to scale down the image
-        ratio = min(max_width / display_width, max_height / display_height)
-        # Set new dimensions while maintaining aspect ratio
-        new_dims = (int(display_width * ratio), int(display_height * ratio))
-        # Resize the image for display
-        display_image = cv2.resize(image, new_dims, interpolation=cv2.INTER_AREA)
-    else:
-        display_image = image
+        # Draw the rectangle
+        cv2.rectangle(img, (x_min, y_min), (x_max, y_max), color, thickness)
 
-    # Display the (potentially resized) image
-    cv2.imshow(window_name, display_image)
-    # --- CHANGE END ---
+        # Put the class label text above the box
+        label = f"{class_name}"
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 0.6
+        font_thickness = 1
+        
+        # Determine text size to make a background rectangle for better visibility
+        (text_width, text_height), baseline = cv2.getTextSize(label, font, font_scale, font_thickness)
+        
+        # Draw a filled rectangle for the label background
+        cv2.rectangle(img, (x_min, y_min - text_height - 5), (x_min + text_width, y_min), color, -1)
+        
+        # Put the text on top of the background
+        cv2.putText(img, label, (x_min, y_min - 5), font, font_scale, (0, 0, 0), font_thickness, cv2.LINE_AA)
+        
+    # 4. Display the image
+    window_name = "YOLO Annotation Visualization"
     
+    # Resize for comfortable viewing if the image is too large
+    if W > 1200 or H > 900:
+        scale_percent = min(1200 / W, 900 / H)
+        new_w = int(W * scale_percent)
+        new_h = int(H * scale_percent)
+        img = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+
+    cv2.imshow(window_name, img)
+    # Wait for a key press to close the window
+    print("Press any key to close the visualization window...")
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    # --- User Configuration ---
-    # Path to the specific image you want to visualize
-    image_path = r'C:\Users\edusa\APD\YOLO_Dataset\images\image_20250612_150253226.png'
 
-    # Path to the corresponding YOLO label file
-    label_path = r'C:\Users\edusa\APD\YOLO_Dataset\labels\image_20250612_150253226.txt'
-    
-    # List of your class names
-    class_names = ['RedBall'] 
+# **IMPORTANT: REPLACE THESE PATHS WITH YOUR ACTUAL FILE LOCATIONS**
+image_path = r'/home/navms1/Documentos/APD/GenVista/Dataset/images/image_20260121_155258405.png' # Ensure this is a valid image file (.jpg, .png, etc.)
+label_path = r'/home/navms1/Documentos/APD/GenVista/Dataset/labels/image_20260121_155258405.txt' # Your label file
 
-    # --- CHANGE: Set the maximum initial size for the display window (width, height) ---
-    # The window will still be resizable if you want to make it bigger or smaller.
-    max_window_size = (1280, 720)
+# **IMPORTANT: DEFINE YOUR CLASS NAMES IN ORDER OF THEIR ID (0, 1, 2, ...)**
+# For example, if class ID 0 is 'cat' and class ID 1 is 'dog'.
+class_names = [
+    "RedBall"
+]
 
-    # --- Run the visualization function ---
-    try:
-        print(f"Attempting to visualize image: {image_path}")
-        # Pass the max window size to the function
-        visualize_yolo(image_path, label_path, class_names, max_window_size)
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+# --- Run the visualization ---
+visualize_yolo_annotations(image_path, label_path, class_names)

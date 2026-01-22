@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &180910759340455293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7980507785838818504}
+  - component: {fileID: 7023234789974735066}
+  - component: {fileID: 4835340498256799503}
+  m_Layer: 0
+  m_Name: AutoCaptureSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7980507785838818504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180910759340455293}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.5214313, y: 1000.3056, z: 10.018107}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7023234789974735066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180910759340455293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8973473abf943c4db94cdce96a4a34c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  captureCamera: {fileID: 0}
+  imageResolution: {x: 1920, y: 1200}
+  captureKey: 101
+  savePath: YOLO_Dataset_Fixed
+--- !u!114 &4835340498256799503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180910759340455293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7794cffe10806bd4489e1d7166052428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
+  yoloAnnotator: {fileID: 7023234789974735066}
+  cesiumTeleporter: {fileID: 0}
+  objectSpawner: {fileID: 0}
+  weatherAutomation: {fileID: 0}
+  toggleAutomationKey: 112
+  captureInterval: 2
+  capturesPerLocation: 600
+  cesiumLoadDelay: 10
+  scenarioList:
+  - name: RG
+    latitude: -32.1169980323767
+    longitude: -52.17555713611734
+    height: 1000
+  - name: SM
+    latitude: -29.7446112942195
+    longitude: -53.83413876341096
+    height: 1000
+  - name: POA
+    latitude: -30.1460427464901
+    longitude: -51.20202419544632
+    height: 1000

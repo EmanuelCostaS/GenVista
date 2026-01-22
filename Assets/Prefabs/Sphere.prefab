@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5015642368322018032}
   - component: {fileID: 8970451703131005494}
   - component: {fileID: 6391902255141531481}
+  - component: {fileID: -3218255550771983211}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -139,3 +140,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   classId: 1
+--- !u!114 &-3218255550771983211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330457708501343001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1d3ac921e87a5d6db1bf1cb0b385eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTransform: {fileID: 0}
+  distanceVariance: 10
+  enableBlinking: 1
+  minVisibleTime: 2
+  maxVisibleTime: 6
+  minInvisibleTime: 1
+  maxInvisibleTime: 3
+  enableWandering: 1
+  wanderSpeed: 2
+  wanderRadius: 3
+  changeDirectionInterval: 2
