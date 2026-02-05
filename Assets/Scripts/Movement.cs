@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour
     [SerializeField] float jumpForce = 12f;
     [SerializeField] float jumpCooldown = 0.25f;
     [SerializeField] float airMultiplier = 0.4f;
-    bool readyToJump;
+    bool readyToJump; ///home/navms1/Documentos/APD/GenVista/Assets/Scripts/Movement.cs
 
     [Header("Flying")]
     [SerializeField] float flySpeed = 5f;
